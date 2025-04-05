@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: metarama-webhook
+    env: node
+    buildCommand: npm install
+    startCommand: node webhook_listener.js
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: HOST
+        value: 0.0.0.0
+      - key: HELIUS_API_KEY
+        sync: false
+      - key: HELIUS_RPC_URL
+        sync: false 

@@ -40,9 +40,3 @@
 .read-the-docs {
   color: #888;
 }
-
-body {
-  background: linear-gradient(to bottom, #cbe4f9 0%, #e6f2ff 100%);
-  min-height: 100vh;
-  padding-top: 50px;
-}
