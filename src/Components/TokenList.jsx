@@ -134,12 +134,7 @@ const TokenList = ({ tokens }) => {
   }
 
   return (
-    <div className="h-[calc(100vh-8rem)] overflow-y-auto rounded-lg border border-gray-800 static-noise">
-      {/* Debug output */}
-      <pre className="text-xs text-gray-500 font-mono overflow-auto max-h-64 p-2 bg-gray-900/30">
-        {JSON.stringify(tokens[0], null, 2)}
-      </pre>
-      
+    <div className="h-[calc(100vh-10rem)] overflow-y-auto rounded-lg border border-gray-800 static-noise">
       <table className="min-w-full">
         <thead className="bg-black sticky top-0 z-10">
           <tr>
