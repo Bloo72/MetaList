@@ -2,8 +2,8 @@
 
 import axios from 'axios';
 
-// Define BASE_URL constant
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://meta-webhook-0bky.onrender.com';
+// Default to environment variable or fallback to the webhook URL
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://metarama-webhook-g603.onrender.com';
 
 // Create axios instance with default config
 const api = axios.create({

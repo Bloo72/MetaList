@@ -1,73 +1,83 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
 import WalletConnectButton from './WalletConnectButton';
 
-const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
-  const location = useLocation();
-  
-  const isActive = (path) => {
-    return location.pathname === path ? 'bg-gray-800' : '';
-  };
-  
+const Sidebar = ({ onRouteChange, routeColors }) => {
+  const { publicKey } = useWallet();
+  const walletAddress = publicKey?.toBase58() || '';
+  const shortAddress = walletAddress ? `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : '';
+
+  const NavItem = ({ to, color, children, channelNumber }) => (
+    <NavLink
+      to={to}
+      className={({ isActive }) => `
+        relative flex items-center px-4 py-3 text-gray-300 hover:text-white group
+        ${isActive ? 'bg-gray-800/50 text-white' : ''}
+      `}
+      onClick={() => onRouteChange(color)}
+    >
+      <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 ${color} transition-colors duration-300 group-hover:w-2`} />
+      <div className="ml-4 flex-1">
+        <div className="font-retro text-xs">{children}</div>
+        <div className="text-[10px] text-gray-500 mt-1 font-retro">CH-{channelNumber.toString().padStart(2, '0')}</div>
+      </div>
+      <div className="h-1.5 w-1.5 rounded-full bg-green-500/50 animate-pulse mr-2"></div>
+    </NavLink>
+  );
+
   return (
-    <div className={`sidebar fixed left-0 top-0 h-screen transition-all duration-300 flex flex-col ${
-      isCollapsed ? 'w-20' : 'w-60'
-    } relative overflow-hidden`}>
-      {/* Noise texture overlay */}
-      <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none"></div>
-      
-      {/* Sidebar content */}
-      <div className="relative z-10">
-        <div className="p-4 flex items-center justify-between border-b border-gray-700">
-          {!isCollapsed && (
-            <h1 className="font-pixel text-xl text-gray-100">METARAMA</h1>
-          )}
-          <button 
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 rounded-full hover:bg-gray-800 text-gray-400"
-            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {isCollapsed ? '→' : '←'}
-          </button>
-        </div>
+    <div className="h-full bg-black border-r border-gray-800 flex flex-col relative overflow-hidden">
+      {/* Scan line animation */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="w-full h-40 bg-gradient-to-b from-white/[0.02] to-transparent animate-scan"></div>
+      </div>
+
+      <div className="p-4 border-b border-gray-800 relative">
+        <h1 className="text-2xl font-retro text-white tracking-widest leading-relaxed glow-text">
+          META<br />RAMA
+        </h1>
+      </div>
+
+      <nav className="flex-1 py-4 space-y-1">
+        <NavItem to="/tokens" color={routeColors['/tokens']} channelNumber={1}>
+          My Tokens
+        </NavItem>
         
-        <nav className="flex-1 mt-8">
-          <ul className="space-y-2 px-2">
-            <li>
-              <Link 
-                to="/tokens" 
-                className={`flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-300 ${isActive('/tokens')}`}
-              >
-                <span className="material-icons mr-3">token</span>
-                {!isCollapsed && <span>My Tokens</span>}
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/new" 
-                className={`flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-300 ${isActive('/new')}`}
-              >
-                <span className="material-icons mr-3">new_releases</span>
-                {!isCollapsed && <span>New Tokens</span>}
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/create" 
-                className={`flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-300 ${isActive('/create')}`}
-              >
-                <span className="material-icons mr-3">add_circle</span>
-                {!isCollapsed && <span>Create Token</span>}
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <NavItem to="/create" color={routeColors['/create']} channelNumber={2}>
+          Create Token
+        </NavItem>
         
-        <div className="p-4 mt-auto border-t border-gray-700">
-          <div className={`wallet-container ${isCollapsed ? 'wallet-collapsed' : ''}`}>
-            <WalletConnectButton />
+        <NavItem to="/" color={routeColors['/']} channelNumber={3}>
+          New Tokens
+        </NavItem>
+
+        <NavItem to="/watchlist" color={routeColors['/watchlist']} channelNumber={4}>
+          Watchlist
+        </NavItem>
+
+        <NavItem to="/alerts" color={routeColors['/alerts']} channelNumber={5}>
+          Alerts
+        </NavItem>
+
+        <NavItem to="/wallet" color={routeColors['/wallet']} channelNumber={6}>
+          Wallet
+        </NavItem>
+
+        <NavItem to="/settings" color={routeColors['/settings']} channelNumber={7}>
+          Settings
+        </NavItem>
+
+        {walletAddress && (
+          <div className="px-4 py-3 mt-4 border-t border-gray-800">
+            <div className="font-retro text-xs text-gray-500">CONNECTED</div>
+            <div className="font-retro text-xs text-gray-300 mt-1">{shortAddress}</div>
           </div>
-        </div>
+        )}
+      </nav>
+
+      <div className="p-4 border-t border-gray-800">
+        <WalletConnectButton />
       </div>
     </div>
   );

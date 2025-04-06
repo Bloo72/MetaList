@@ -47,9 +47,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://metarama-webhook.onrender.com',
+        target: 'https://metarama-webhook-g603.onrender.com',
         changeOrigin: true,
-        secure: false,
+        // rewrite: (path) => path.replace(/^\/api/, ''),
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
             console.log('proxy error', err);
