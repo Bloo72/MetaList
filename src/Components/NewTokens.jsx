@@ -13,6 +13,7 @@ const NewTokens = () => {
         setTokens(response.data.tokens || []);
       } catch (err) {
         console.error('❌ Failed to fetch tokens:', err.message);
+        setTokens([]); // Ensure tokens is always an array even on error
       } finally {
         setLoading(false);
       }
@@ -31,7 +32,7 @@ const NewTokens = () => {
       {loading ? (
         <p className="text-gray-400">Loading tokens...</p>
       ) : (
-        <TokenList tokens={tokens} />
+        <TokenList tokens={tokens || []} />
       )}
     </div>
   );
