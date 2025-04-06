@@ -134,7 +134,7 @@ const TokenList = ({ tokens }) => {
   }
 
   return (
-    <div className="h-[calc(100vh-12rem)] overflow-y-auto rounded-lg border border-gray-800 static-noise">
+    <div className="h-[calc(100vh-26rem)] max-h-[800px] overflow-y-auto rounded-lg border border-gray-800 static-noise">
       <table className="min-w-full">
         <thead className="bg-black sticky top-0 z-10">
           <tr>
