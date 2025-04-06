@@ -2,6 +2,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  safelist: [
+    'ml-20',
+    'ml-60',
+    'max-w-[calc(100%-5rem)]',
+    'max-w-[calc(100%-15rem)]'
+  ],
   theme: {
     extend: {
       colors: {
