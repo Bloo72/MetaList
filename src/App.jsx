@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
+import Sidebar from './Components/Sidebar';
 import CreateToken from './Components/CreateToken';
 import NewTokens from './Components/NewTokens';
 import TokenList from './Components/TokenList';
