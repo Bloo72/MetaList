@@ -30,15 +30,17 @@ function AppContent() {
   return (
     <div className="flex min-h-screen bg-black overflow-hidden">
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <main className={`flex-1 transition-all duration-300 ${
+      <main className={`flex-1 transition-all duration-300 flex justify-center px-6 ${
         isCollapsed ? 'ml-20' : 'ml-60'
       }`}>
-        <Routes>
-          <Route path="/" element={<NewTokens />} />
-          <Route path="/tokens" element={<TokenList />} />
-          <Route path="/create" element={<CreateToken />} />
-          <Route path="/new" element={<NewTokens />} />
-        </Routes>
+        <div className="w-full max-w-[1200px]">
+          <Routes>
+            <Route path="/" element={<NewTokens />} />
+            <Route path="/tokens" element={<TokenList />} />
+            <Route path="/create" element={<CreateToken />} />
+            <Route path="/new" element={<NewTokens />} />
+          </Routes>
+        </div>
       </main>
     </div>
   );

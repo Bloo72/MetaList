@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import TokenList from './TokenList';
 
@@ -7,36 +7,21 @@ const NewTokens = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+  const latestTimestampRef = useRef(null);
 
-  // Initial load - get more tokens
+  // Initial load - get full list of recent tokens
   const initialFetch = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // First try the debug endpoint
-      const debugResponse = await axios.get('/api/debug/tokens', {
+      const response = await axios.get('/api/tokens/recent?limit=230', {
         timeout: 5000,
         headers: {
           'Accept': 'application/json',
           'Cache-Control': 'no-cache'
         }
       });
-      
-      console.log('Debug response:', debugResponse.data);
-      console.log('Sample token:', debugResponse.data.sample);
-      
-      // Then fetch the actual tokens
-      const response = await axios.get('/api/tokens/recent?limit=100', {
-        timeout: 5000,
-        headers: {
-          'Accept': 'application/json',
-          'Cache-Control': 'no-cache'
-        }
-      });
-      
-      console.log('API Response:', response);
-      console.log('Response data:', response.data);
       
       if (response.data && Array.isArray(response.data.tokens)) {
         // Sanitize tokens before setting state
@@ -47,8 +32,11 @@ const NewTokens = () => {
           signature: token.signature || token.mint || 'unknown'
         }));
         
-        console.log('Sanitized tokens:', sanitizedTokens);
-        console.log('First token:', sanitizedTokens[0]);
+        // Update latest timestamp reference
+        if (sanitizedTokens.length > 0) {
+          latestTimestampRef.current = sanitizedTokens[0].timestamp;
+          console.log('Initial latest timestamp:', latestTimestampRef.current);
+        }
         
         setTokens(sanitizedTokens);
       } else {
@@ -65,10 +53,15 @@ const NewTokens = () => {
     }
   };
 
-  // Only check for new tokens periodically - use a larger interval
+  // Only fetch tokens newer than our latest timestamp
   const refreshFetch = async () => {
     try {
-      const response = await axios.get('/api/tokens/recent?limit=30', {
+      if (!latestTimestampRef.current) {
+        console.log('No timestamp reference, skipping refresh');
+        return;
+      }
+
+      const response = await axios.get('/api/tokens/recent?limit=50', {
         timeout: 5000,
         headers: {
           'Accept': 'application/json',
@@ -78,20 +71,32 @@ const NewTokens = () => {
       
       if (response.data && Array.isArray(response.data.tokens)) {
         // Sanitize new tokens
-        const newTokens = response.data.tokens.map(token => ({
-          name: token.name || 'Unknown Token',
-          mint: token.mint || token.signature || 'unknown',
-          timestamp: token.timestamp || new Date().toISOString(),
-          signature: token.signature || token.mint || 'unknown'
-        }));
-        
-        // Merge new tokens with existing ones
-        setTokens(prevTokens => {
-          // Filter out duplicates
-          const existingMints = new Set(prevTokens.map(t => t.mint));
-          const uniqueNewTokens = newTokens.filter(t => !existingMints.has(t.mint));
-          return [...uniqueNewTokens, ...prevTokens].slice(0, 100); // Keep list manageable
-        });
+        const newTokens = response.data.tokens
+          .map(token => ({
+            name: token.name || 'Unknown Token',
+            mint: token.mint || token.signature || 'unknown',
+            timestamp: token.timestamp || new Date().toISOString(),
+            signature: token.signature || token.mint || 'unknown'
+          }))
+          // Only keep tokens newer than our latest timestamp
+          .filter(token => new Date(token.timestamp) > new Date(latestTimestampRef.current));
+
+        if (newTokens.length > 0) {
+          console.log(`Found ${newTokens.length} new tokens since ${latestTimestampRef.current}`);
+          // Update latest timestamp reference
+          latestTimestampRef.current = newTokens[0].timestamp;
+          console.log('New latest timestamp:', latestTimestampRef.current);
+          
+          // Merge new tokens with existing ones
+          setTokens(prevTokens => {
+            // Filter out duplicates
+            const existingMints = new Set(prevTokens.map(t => t.mint));
+            const uniqueNewTokens = newTokens.filter(t => !existingMints.has(t.mint));
+            return [...uniqueNewTokens, ...prevTokens].slice(0, 230); // Keep list at 230 tokens
+          });
+        } else {
+          console.log('No new tokens found since', latestTimestampRef.current);
+        }
       }
     } catch (err) {
       console.error('Refresh error:', err);
@@ -103,7 +108,7 @@ const NewTokens = () => {
     // Run initial fetch once
     initialFetch();
 
-    // Set up refresh on a longer interval (60 seconds instead of 15)
+    // Set up refresh on a longer interval (60 seconds)
     const refreshInterval = setInterval(refreshFetch, 60000);
     
     // Update current time every second
@@ -168,7 +173,7 @@ const NewTokens = () => {
   }
 
   return (
-    <div className="p-4 max-w-[1200px] mx-auto mt-0">
+    <div className="w-full">
       {/* TV-style header */}
       <div className="w-full bg-black p-4 border-b border-gray-800 mb-4">
         <div className="flex items-center justify-between">
