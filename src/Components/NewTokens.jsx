@@ -9,7 +9,7 @@ const NewTokens = () => {
   useEffect(() => {
     const fetchTokens = async () => {
       try {
-        const response = await axios.get('https://meta-webhook-0bky.onrender.com/api/tokens/recent?limit=230');
+        const response = await axios.get('https://metarama-webhook.onrender.com/api/tokens/recent?limit=230');
         setTokens(response.data.tokens || []);
       } catch (err) {
         console.error('❌ Failed to fetch tokens:', err.message);
