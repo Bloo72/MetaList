@@ -28,41 +28,17 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="flex min-h-screen bg-black overflow-hidden">
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <main 
-        className={`transition-all duration-300 min-h-screen py-4 ${
-          isCollapsed ? 'ml-20' : 'ml-60'
-        }`}
-      >
-        <div className="p-6">
-          <div className="crt-screen bg-gray-900/50 p-6 relative overflow-hidden">
-            {/* Noise overlay */}
-            <div className="absolute inset-0 bg-noise opacity-5 pointer-events-none"></div>
-            
-            {/* Main content */}
-            <div className="relative z-10">
-              <Routes>
-                <Route 
-                  path="/" 
-                  element={<TokenList />} 
-                />
-                <Route 
-                  path="/tokens" 
-                  element={<TokenList />} 
-                />
-                <Route 
-                  path="/create" 
-                  element={<CreateToken />} 
-                />
-                <Route 
-                  path="/new" 
-                  element={<NewTokens />} 
-                />
-              </Routes>
-            </div>
-          </div>
-        </div>
+      <main className={`flex-1 transition-all duration-300 ${
+        isCollapsed ? 'ml-20' : 'ml-60'
+      }`}>
+        <Routes>
+          <Route path="/" element={<NewTokens />} />
+          <Route path="/tokens" element={<TokenList />} />
+          <Route path="/create" element={<CreateToken />} />
+          <Route path="/new" element={<NewTokens />} />
+        </Routes>
       </main>
     </div>
   );
