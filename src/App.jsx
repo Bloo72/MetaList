@@ -31,7 +31,7 @@ function AppContent() {
     <div className="flex min-h-screen bg-black overflow-hidden">
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
       <main className={`flex-1 transition-all duration-300 flex justify-center px-6 ${
-        isCollapsed ? 'ml-20 max-w-[calc(100%-5rem)]' : 'ml-60 max-w-[calc(100%-15rem)]'
+        isCollapsed ? 'ml-20' : 'ml-60'
       }`}>
         <div className="w-full max-w-[1200px]">
           <Routes>
