@@ -168,29 +168,31 @@ const NewTokens = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 max-w-[1200px] mx-auto mt-0">
       <div className="mb-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-white font-mono tracking-error">NEW TOKENS</h1>
         <div className="text-sm text-gray-400 font-mono">{currentTime}</div>
       </div>
       
-      {error ? (
-        <div className="text-center py-10">
-          <div className="inline-block p-6 bg-red-900/20 border border-red-800 rounded-lg">
-            <h2 className="text-xl font-bold text-red-400 mb-2 font-mono tracking-error">ERROR</h2>
-            <p className="text-red-300 font-mono">{error}</p>
+      <div className="relative">
+        {error ? (
+          <div className="text-center py-10">
+            <div className="inline-block p-6 bg-red-900/20 border border-red-800 rounded-lg">
+              <h2 className="text-xl font-bold text-red-400 mb-2 font-mono tracking-error">ERROR</h2>
+              <p className="text-red-300 font-mono">{error}</p>
+            </div>
           </div>
-        </div>
-      ) : loading ? (
-        <div className="text-center py-10">
-          <div className="inline-block p-6 bg-gray-900/20 border border-gray-800 rounded-lg">
-            <h2 className="text-xl font-bold text-gray-400 mb-2 font-mono tracking-error">LOADING</h2>
-            <p className="text-gray-300 font-mono">Fetching tokens...</p>
+        ) : loading ? (
+          <div className="text-center py-10">
+            <div className="inline-block p-6 bg-gray-900/20 border border-gray-800 rounded-lg">
+              <h2 className="text-xl font-bold text-gray-400 mb-2 font-mono tracking-error">LOADING</h2>
+              <p className="text-gray-300 font-mono">Fetching tokens...</p>
+            </div>
           </div>
-        </div>
-      ) : (
-        <TokenList tokens={tokens} />
-      )}
+        ) : (
+          <TokenList tokens={tokens} />
+        )}
+      </div>
     </div>
   );
 };

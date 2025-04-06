@@ -31,7 +31,7 @@ function AppContent() {
     <div className="min-h-screen bg-black">
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
       <main 
-        className={`transition-all duration-300 min-h-screen ${
+        className={`transition-all duration-300 min-h-screen py-4 ${
           isCollapsed ? 'ml-20' : 'ml-60'
         }`}
       >
