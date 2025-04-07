@@ -331,3 +331,39 @@
 .signal-indicator {
   animation: signalPulse 2s infinite;
 }
+
+/* Token Card Styles */
+.token-card {
+  width: 70%;
+  max-width: 900px;
+  margin: 1rem auto;
+  padding: 1.25rem 1.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.token-card:hover {
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Ensure content is properly centered when sidebar is collapsed */
+@media (min-width: 768px) {
+  .sidebar-collapsed .main-content {
+    margin-left: 0 !important;
+  }
+}
+
+/* Vibrant sidebar colors */
+.sidebar-color-strip {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Ensure smooth transitions for sidebar collapse */
+.sidebar-transition {
+  transition: width 0.3s ease-in-out;
+}

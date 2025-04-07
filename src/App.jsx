@@ -21,56 +21,71 @@ function addRandomGlitches() {
   }, 3000);
 }
 
-// Color mapping for routes - TV signal colors
-const routeColors = {
-  '/tokens': 'bg-[#d3d3d3]',    // Gray - CH-01
-  '/create': 'bg-[#ffeb3b]',    // Yellow - CH-02
-  '/': 'bg-[#00e5ff]',          // Cyan - CH-03
-  '/watchlist': 'bg-[#00e676]', // Green - CH-04
-  '/alerts': 'bg-[#d500f9]',    // Magenta - CH-05
-  '/wallet': 'bg-[#ff1744]',    // Red - CH-06
-  '/settings': 'bg-[#2979ff]',  // Blue - CH-07
-  'default': 'bg-[#d3d3d3]'     // Default to gray
-};
-
-function AppContent() {
-  const [headerColor, setHeaderColor] = useState(routeColors['/']);
+const AppContent = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [activeColor, setActiveColor] = useState('#00FFFF'); // Default cyan color
   const location = useLocation();
+
+  const toggleSidebar = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
+  const handleRouteChange = (color) => {
+    setActiveColor(color);
+  };
+
+  // Channel colors mapping - vibrant retro TV colors
+  const routeColors = {
+    '/tokens': '#00FF00', // Bright Green
+    '/create': '#FFFF00', // Bright Yellow
+    '/': '#00FFFF',       // Bright Cyan
+    '/watchlist': '#00FF66', // Bright Mint
+    '/alerts': '#FF00FF', // Bright Fuchsia
+    '/wallet': '#FF0033', // Bright Red
+    '/settings': '#3399FF', // Bright Blue
+  };
 
   useEffect(() => {
     addRandomGlitches();
   }, []);
 
   useEffect(() => {
-    // Add a quick flicker effect when changing routes
-    const newColor = routeColors[location.pathname] || routeColors.default;
-    setHeaderColor('bg-black'); // Brief blackout
-    setTimeout(() => setHeaderColor(newColor), 50); // Quick flicker to new color
+    // Update active color when route changes
+    const path = location.pathname;
+    setActiveColor(routeColors[path] || '#00FFFF');
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen bg-black">
-      <aside className="fixed top-0 left-0 h-screen w-60 z-50">
-        <Sidebar onRouteChange={setHeaderColor} routeColors={routeColors} />
-      </aside>
-
-      <div className="ml-60 flex flex-col w-[calc(100%-15rem)]">
-        <RetroHeader color={headerColor} />
-        <div className="px-4 py-6">
-          <Routes>
-            <Route path="/" element={<NewTokens />} />
-            <Route path="/tokens" element={<TokenList />} />
-            <Route path="/create" element={<CreateToken />} />
-            <Route path="/watchlist" element={<div>Coming Soon</div>} />
-            <Route path="/alerts" element={<div>Coming Soon</div>} />
-            <Route path="/wallet" element={<div>Coming Soon</div>} />
-            <Route path="/settings" element={<div>Coming Soon</div>} />
-          </Routes>
-        </div>
+    <div className="flex h-screen bg-black overflow-hidden">
+      <Sidebar 
+        onRouteChange={handleRouteChange} 
+        routeColors={routeColors}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={toggleSidebar}
+      />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <RetroHeader 
+          color={activeColor} 
+          isCollapsed={isCollapsed}
+          onToggleCollapse={toggleSidebar}
+        />
+        <main className="flex-1 overflow-auto transition-all duration-300">
+          <div className={`w-full h-full transition-all duration-300 ${isCollapsed ? 'pl-0' : 'pl-0'}`}>
+            <Routes>
+              <Route path="/" element={<NewTokens />} />
+              <Route path="/tokens" element={<TokenList />} />
+              <Route path="/create" element={<CreateToken />} />
+              <Route path="/watchlist" element={<div>Coming Soon</div>} />
+              <Route path="/alerts" element={<div>Coming Soon</div>} />
+              <Route path="/wallet" element={<div>Coming Soon</div>} />
+              <Route path="/settings" element={<div>Coming Soon</div>} />
+            </Routes>
+          </div>
+        </main>
       </div>
     </div>
   );
-}
+};
 
 function App() {
   return (
