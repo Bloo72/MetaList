@@ -1,16 +1,15 @@
 // API configuration
-export const BASE_URL = import.meta.env.VITE_API_URL || "https://metarama-webhook-g603.onrender.com";
+export const BASE_URL = 'https://metarama-webhook-g603.onrender.com';
 
 // Log the current API configuration
 console.log('API Configuration:', {
   BASE_URL,
-  ENV: import.meta.env.MODE,
-  API_URL: import.meta.env.VITE_API_URL
+  ENV: import.meta.env.MODE
 });
 
 // API endpoints
 export const ENDPOINTS = {
-  NEW_TOKENS: `${BASE_URL}/api/tokens/recent`,
+  NEW_TOKENS: `${BASE_URL}/api/tokens/recent?limit=100`,
   ALL_TOKENS: `${BASE_URL}/api/tokens`,
   TOKEN_DETAILS: (address) => `${BASE_URL}/api/tokens/${address}`,
   CREATE_TOKEN: `${BASE_URL}/api/tokens/create`,
